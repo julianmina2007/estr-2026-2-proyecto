@@ -9,18 +9,12 @@ El enunciado completo está en la página del curso:
 
 ## Integrantes del grupo
 
-Reemplacen esta tabla con sus datos. **Si falta el archivo, o le falta
-el nombre, el código o el correo de algún integrante, la entrega pierde
-el 20 % de la nota**; quien no aparezca aquí no cuenta como integrante y
-su nota del proyecto es 0.0.
-
 | Nombre completo | Código | Correo institucional | Usuario de GitHub |
 |---|---|---|---|
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| Julian Andres Mina Ospina | 9028795 | julianmina2007@javerianacali.edu.co | julianmina2007 |
+| Cristian Muñoz Obando | 9033692 | cristianmunoz00890@javerianacali.edu.co | cristianm00890 |
 
-**Escenario escogido:** (A inventario / B frecuencias / C turnos / D índice)
+**Escenario escogido:** A - Inventario
 
 - Estructura escrita desde cero:
 - Estructura de la biblioteca contra la que se compara:
