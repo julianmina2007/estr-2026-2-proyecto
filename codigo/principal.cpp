@@ -54,7 +54,56 @@ void consultar(Nodo* cabeza, int codigo) {
         cout << "no existe" << endl;
     }
 }
-  
+
+void reponer(Nodo* cabeza, int codigo, int cantidadAdicional) {
+    Nodo* encontrado = buscar(cabeza, codigo);
+
+    if (encontrado != NULL) {
+        encontrado->cantidad = encontrado->cantidad + cantidadAdicional;
+        cout << "ok" << endl;
+    } else {
+        cout << "no existe" << endl;
+    }
+}
+
+void eliminar(Nodo*& cabeza, int codigo) {
+    Nodo* actual = cabeza;
+    Nodo* anterior = NULL;
+
+    while (actual != NULL && actual->codigo != codigo) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual != NULL) {
+        if (anterior == NULL) {
+            cabeza = actual->siguiente;
+        } else {
+            anterior->siguiente = actual->siguiente;
+        }
+
+        delete actual;
+        cout << "ok" << endl;
+    } else {
+        cout << "no existe" << endl;
+    }
+}
+
+void listar(Nodo* cabeza) {
+    Nodo* actual = cabeza;
+
+    if (actual == NULL) {
+        cout << "no existe" << endl;
+    } else {
+        while (actual != NULL) {
+            cout << actual->codigo << " "
+                 << actual->nombre << " "
+                 << actual->cantidad << endl;
+
+            actual = actual->siguiente;
+        }
+    }
+} 
 
 int main() {
     Nodo* cabeza = NULL;
@@ -86,6 +135,34 @@ int main() {
 
             consultar(cabeza, codigo);
         }
+
+        else if (operacion == "REPONER") {
+            int codigo;
+            int cantidad;
+
+            cin >> codigo >> cantidad;
+
+            reponer(cabeza, codigo, cantidad);
+        }
+
+        else if (operacion == "ELIMINAR") {
+            int codigo;
+            cin >> codigo;
+
+            eliminar(cabeza, codigo);
+        }
+
+        else if (operacion == "LISTAR") {
+            listar(cabeza);
+        }
+    }
+
+    Nodo* actual = cabeza;
+
+    while (actual != NULL) {
+        Nodo* siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
     }
 
     return 0;
