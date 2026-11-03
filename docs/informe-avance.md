@@ -1,53 +1,123 @@
-# Informe del avance
 
-*(Borren los comentarios entre paréntesis al escribir.)*
+# Informe de avance – Escenario A: Inventario
 
-## 1. El escenario
+## 1. Descripción del escenario
 
-(Descríbanlo en sus propias palabras: qué guarda el programa, quién lo
-usa y para qué. No copien el enunciado.)
+El escenario consiste en crear un programa para manejar el inventario de una tienda. Cada artículo tiene un código, un nombre y una cantidad disponible.
+El programa debe permitir agregar artículos, eliminarlos, consultar su información, reponer unidades y mostrar todos los artículos registrados.
 
-## 2. Qué guarda la estructura y qué operaciones necesita
+## 2. Estructura y operaciones
 
-| Operación | Qué hace | Precondición |
-|---|---|---|
-|  |  |  |
+Para este avance utilizamos una lista simplemente enlazada. Cada nodo guarda el código, el nombre y la cantidad de un artículo. También tiene un puntero que señala al siguiente nodo.
+Las operaciones que debe realizar el programa son:
 
-## 3. La estructura escogida y por qué
+| Operación | Descripción |
+|---|---|
+| AGREGAR | Agrega un artículo si su código no está registrado. |
+| ELIMINAR | Elimina un artículo usando su código. |
+| CONSULTAR | Busca un artículo y muestra su información. |
+| REPONER | Aumenta la cantidad de un artículo. |
+| LISTAR | Muestra todos los artículos registrados. |
 
-(Por qué esa y no la otra, en términos del orden en que entran y salen
-los elementos y de lo que cuesta cada operación. Citen el texto guía:
-Thareja capítulo X, o CLRS 4.ª ed. capítulo Y.)
+## 3. Elección de la estructura y costos
 
-Costos esperados, con $n$ el número de elementos:
+Escogimos una lista simplemente enlazada porque permite agregar y eliminar artículos sin tener que mover los demás elementos de la estructura. Además, podemos recorrerla para buscar un artículo por su código.
+Los costos esperados de las operaciones son:
 
-| Operación | Tiempo | Espacio |
-|---|---|---|
-|  | $O(1)$ | $O(1)$ |
+| Operación | Costo esperado |
+|---|---|
+| AGREGAR | O(n), porque se debe revisar si el código ya existe. |
+| ELIMINAR | O(n), porque se debe buscar el artículo. |
+| CONSULTAR | O(n), porque se recorre la lista hasta encontrar el código. |
+| REPONER | O(n), porque primero se debe buscar el artículo. |
+| LISTAR | O(n), porque se deben recorrer todos los nodos. |
+Donde n representa la cantidad de artículos registrados.
+Esta elección se relaciona con el tema de estructuras lineales, explicado en la sección 7 del material de clase. Los costos se relacionan con el tema de complejidad, explicado en la sección 2.
 
-El invariante de la estructura, como fórmula:
+## 4. Pruebas realizadas
 
-$$I:\quad 0 \leq n \leq \text{capacidad}$$
+Se realizaron cuatro pruebas para comprobar que las operaciones funcionaran correctamente.
 
-Un diagrama del estado de la estructura, en Mermaid:
+### Prueba 1
 
-```mermaid
-flowchart LR
-  n1["dato 7"] --> n2["dato 3"] --> n3["dato 9"] --> nil["NULL"]
-```
+**Entrada:**
+7
+AGREGAR 1004512 arroz 20
+AGREGAR 1004498 azucar 5
+CONSULTAR 1004512
+REPONER 1004498 10
+CONSULTAR 1004498
+ELIMINAR 1004512
+CONSULTAR 1004512
 
-## 4. Qué piensan medir
+**Salida esperada:**
+ok
+ok
+1004512 arroz 20
+ok
+1004498 azucar 15
+ok
+no existe
+**Salida obtenida:** Coincide con la esperada.
 
-(Qué entrada van a variar, entre qué tamaños, y qué esperan ver.)
+### Prueba 2
 
-## 5. Casos de prueba
+**Entrada:**
+5
+AGREGAR 101 pan 10
+AGREGAR 102 leche 4
+AGREGAR 101 arroz 8
+LISTAR
+CONSULTAR 102
 
-| Caso | Entrada | Salida esperada | Salida obtenida |
-|---|---|---|---|
-| funcional 1 |  |  |  |
-| funcional 2 |  |  |  |
-| funcional 3 |  |  |  |
-| límite |  |  |  |
+**Salida esperada:**
+ok
+ok
+repetido
+102 leche 4
+101 pan 10
+102 leche 4
+**Salida obtenida:** Coincide con la esperada.
 
-(El caso límite es la estructura vacía, con un solo elemento, llena, o
-con la clave repetida: digan cuál escogieron y por qué.)
+### Prueba 3
+
+**Entrada:**
+7
+AGREGAR 10 arroz 20
+AGREGAR 20 leche 5
+AGREGAR 30 pan 8
+ELIMINAR 20
+CONSULTAR 20
+ELIMINAR 30
+LISTAR
+
+**Salida esperada:**
+ok
+ok
+ok
+ok
+no existe
+ok
+10 arroz 20
+**Salida obtenida:** Coincide con la esperada.
+
+### Prueba 4: lista vacía
+
+**Entrada:**
+4
+LISTAR
+CONSULTAR 100
+ELIMINAR 100
+REPONER 100 5
+
+**Salida esperada:**
+no existe
+no existe
+no existe
+**Salida obtenida:** Coincide con la esperada. La operación LISTAR no muestra nada porque la lista está vacía.
+
+## 5. Mediciones para la entrega final
+
+Para la entrega final pensamos medir cuánto tarda la operación CONSULTAR al aumentar la cantidad de artículos.
+También compararemos los resultados de la lista enlazada, la tabla hash y `map`. Para la tabla hash probaremos diferentes tamaños y un caso en el que varios códigos queden en la misma posición.
+Con estos resultados podremos comparar el comportamiento de las tres estructuras.
