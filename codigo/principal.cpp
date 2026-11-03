@@ -92,18 +92,14 @@ void eliminar(Nodo*& cabeza, int codigo) {
 void listar(Nodo* cabeza) {
     Nodo* actual = cabeza;
 
-    if (actual == NULL) {
-        cout << "no existe" << endl;
-    } else {
-        while (actual != NULL) {
-            cout << actual->codigo << " "
-                 << actual->nombre << " "
-                 << actual->cantidad << endl;
+    while (actual != NULL) {
+        cout << actual->codigo << " "
+             << actual->nombre << " "
+             << actual->cantidad << endl;
 
-            actual = actual->siguiente;
-        }
+        actual = actual->siguiente;
     }
-} 
+}
 
 int main() {
     Nodo* cabeza = NULL;
