@@ -11,6 +11,15 @@ struct Nodo {
     Nodo* siguiente;
 };
 
+struct Lista {
+    Nodo* cabeza;
+};
+
+struct TablaHash {
+    Nodo** posiciones;
+    int tamano;
+};
+
 
 Nodo* buscar(Nodo* cabeza, int codigo) {
     Nodo* actual = cabeza;
@@ -42,6 +51,9 @@ bool agregar(Nodo*& cabeza, int codigo, string nombre, int cantidad) {
     return agregado;
 }
 
+bool agregar(Lista& lista, int codigo, string nombre, int cantidad) {
+    return agregar(lista.cabeza, codigo, nombre, cantidad);
+}
 
 void consultar(Nodo* cabeza, int codigo) {
     Nodo* encontrado = buscar(cabeza, codigo);
@@ -101,8 +113,120 @@ void listar(Nodo* cabeza) {
     }
 }
 
+int posicion(int codigo, int tamano) {
+    return codigo % tamano;
+}
+
+Nodo** crearTabla(int tamano) {
+    Nodo** tabla = new Nodo*[tamano];
+
+    for (int i = 0; i < tamano; i++) {
+        tabla[i] = NULL;
+    }
+
+    return tabla;
+}
+
+bool agregarHash(Nodo** tabla, int tamano, int codigo, string nombre, int cantidad) {
+    bool agregado = false;
+
+    int indice = posicion(codigo, tamano);
+
+    if (buscar(tabla[indice], codigo) == NULL) {
+        Nodo* nuevo = new Nodo;
+
+        nuevo->codigo = codigo;
+        nuevo->nombre = nombre;
+        nuevo->cantidad = cantidad;
+
+        nuevo->siguiente = tabla[indice];
+        tabla[indice] = nuevo;
+
+        agregado = true;
+    }
+
+    return agregado;
+}
+
+bool agregar(TablaHash& tabla, int codigo, string nombre, int cantidad) {
+    return agregarHash(tabla.posiciones, tabla.tamano, codigo, nombre, cantidad);
+}
+
+void consultarHash(Nodo** tabla, int tamano, int codigo) {
+    int indice = posicion(codigo, tamano);
+
+    consultar(tabla[indice], codigo);
+}
+
+void reponerHash(Nodo** tabla, int tamano, int codigo, int cantidadAdicional) {
+    int indice = posicion(codigo, tamano);
+
+    reponer(tabla[indice], codigo, cantidadAdicional);
+}
+
+void eliminarHash(Nodo** tabla, int tamano, int codigo) {
+    int indice = posicion(codigo, tamano);
+
+    eliminar(tabla[indice], codigo);
+}
+
+void listarHash(Nodo** tabla, int tamano) {
+    for (int i = 0; i < tamano; i++) {
+        listar(tabla[i]);
+    }
+}
+
+void liberarTabla(Nodo** tabla, int tamano) {
+    for (int i = 0; i < tamano; i++) {
+        Nodo* actual = tabla[i];
+
+        while (actual != NULL) {
+            Nodo* siguiente = actual->siguiente;
+            delete actual;
+            actual = siguiente;
+        }
+    }
+
+    delete[] tabla;
+}
+
+void consultar(Lista& lista, int codigo) {
+    consultar(lista.cabeza, codigo);
+}
+
+void consultar(TablaHash& tabla, int codigo) {
+    consultarHash(tabla.posiciones, tabla.tamano, codigo);
+}
+
+void reponer(Lista& lista, int codigo, int cantidad) {
+    reponer(lista.cabeza, codigo, cantidad);
+}
+
+void reponer(TablaHash& tabla, int codigo, int cantidad) {
+    reponerHash(tabla.posiciones, tabla.tamano, codigo, cantidad);
+}
+
+void eliminar(Lista& lista, int codigo) {
+    eliminar(lista.cabeza, codigo);
+}
+
+void eliminar(TablaHash& tabla, int codigo) {
+    eliminarHash(tabla.posiciones, tabla.tamano, codigo);
+}
+
+void listar(Lista& lista) {
+    listar(lista.cabeza);
+}
+
+void listar(TablaHash& tabla) {
+    listarHash(tabla.posiciones, tabla.tamano);
+}
+
 int main() {
-    Nodo* cabeza = NULL;
+    TablaHash inventario;
+
+    inventario.tamano = 5;
+    inventario.posiciones = crearTabla(inventario.tamano);
 
     int cantidadComandos;
     cin >> cantidadComandos;
@@ -118,7 +242,7 @@ int main() {
 
             cin >> codigo >> nombre >> cantidad;
 
-            if (agregar(cabeza, codigo, nombre, cantidad)) {
+            if (agregar(inventario, codigo, nombre, cantidad)) {
                 cout << "ok" << endl;
             } else {
                 cout << "repetido" << endl;
@@ -129,7 +253,7 @@ int main() {
             int codigo;
             cin >> codigo;
 
-            consultar(cabeza, codigo);
+            consultar(inventario, codigo);
         }
 
         else if (operacion == "REPONER") {
@@ -138,28 +262,22 @@ int main() {
 
             cin >> codigo >> cantidad;
 
-            reponer(cabeza, codigo, cantidad);
+            reponer(inventario, codigo, cantidad);
         }
 
         else if (operacion == "ELIMINAR") {
             int codigo;
             cin >> codigo;
 
-            eliminar(cabeza, codigo);
+            eliminar(inventario, codigo);
         }
 
         else if (operacion == "LISTAR") {
-            listar(cabeza);
+            listar(inventario);
         }
     }
 
-    Nodo* actual = cabeza;
-
-    while (actual != NULL) {
-        Nodo* siguiente = actual->siguiente;
-        delete actual;
-        actual = siguiente;
-    }
+    liberarTabla(inventario.posiciones, inventario.tamano);
 
     return 0;
 }
