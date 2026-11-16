@@ -16,8 +16,8 @@ El enunciado completo está en la página del curso:
 
 **Escenario escogido:** A - Inventario
 
-- Estructura escrita desde cero:
-- Estructura de la biblioteca contra la que se compara:
+- Estructura escrita desde cero: lista enlazada para el avance y tabla hash con encadenamiento para la entrega final.
+- Estructura de la biblioteca contra la que se compara: std::map de C++.
 
 ## Lo primero
 

@@ -1,15 +1,15 @@
-// Autores: Julian Andres Mina Ospina 9028795, Cristian Muñoz Obando 9033692
+
 #include <iostream>
 #include <string>
 #include <map>
+#include "lista.h"
+#include "lista.cpp"
 
 using namespace std;
 
-struct Nodo {
-    int codigo;
-    string nombre;
-    int cantidad;
-    Nodo* siguiente;
+struct TablaHash {
+    Nodo** posiciones;
+    int tamano;
 };
 
 struct Producto {
@@ -17,13 +17,12 @@ struct Producto {
     int cantidad;
 };
 
-bool agregar(map<int, Producto>& inventario,
-             int codigo, string nombre, int cantidad) {
-
+bool agregar(map<int, Producto>& inventario, int codigo, const string& nombre, int cantidad) {
     bool agregado = false;
 
     if (inventario.find(codigo) == inventario.end()) {
         Producto nuevo;
+
         nuevo.nombre = nombre;
         nuevo.cantidad = cantidad;
 
@@ -38,7 +37,7 @@ void consultar(map<int, Producto>& inventario, int codigo) {
     map<int, Producto>::iterator encontrado = inventario.find(codigo);
 
     if (encontrado != inventario.end()) {
-        cout << codigo << " "
+        cout << encontrado->first << " "
              << encontrado->second.nombre << " "
              << encontrado->second.cantidad << endl;
     } else {
@@ -46,13 +45,13 @@ void consultar(map<int, Producto>& inventario, int codigo) {
     }
 }
 
-void reponer(map<int, Producto>& inventario,
-             int codigo, int cantidad) {
-
+void reponer(map<int, Producto>& inventario, int codigo, int cantidadAdicional) {
     map<int, Producto>::iterator encontrado = inventario.find(codigo);
 
     if (encontrado != inventario.end()) {
-        encontrado->second.cantidad += cantidad;
+        encontrado->second.cantidad =
+            encontrado->second.cantidad + cantidadAdicional;
+
         cout << "ok" << endl;
     } else {
         cout << "no existe" << endl;
@@ -71,113 +70,14 @@ void eliminar(map<int, Producto>& inventario, int codigo) {
 }
 
 void listar(map<int, Producto>& inventario) {
-    for (map<int, Producto>::iterator actual = inventario.begin();
-         actual != inventario.end(); ++actual) {
+    map<int, Producto>::iterator actual = inventario.begin();
 
+    while (actual != inventario.end()) {
         cout << actual->first << " "
              << actual->second.nombre << " "
              << actual->second.cantidad << endl;
-    }
-}
-struct Lista {
-    Nodo* cabeza;
-};
 
-struct TablaHash {
-    Nodo** posiciones;
-    int tamano;
-};
-
-
-Nodo* buscar(Nodo* cabeza, int codigo) {
-    Nodo* actual = cabeza;
-
-    while (actual != NULL && actual->codigo != codigo) {
-        actual = actual->siguiente;
-    }
-
-    return actual;
-}
-
-
-bool agregar(Nodo*& cabeza, int codigo, string nombre, int cantidad) {
-    bool agregado = false;
-
-    if (buscar(cabeza, codigo) == NULL) {
-        Nodo* nuevo = new Nodo;
-
-        nuevo->codigo = codigo;
-        nuevo->nombre = nombre;
-        nuevo->cantidad = cantidad;
-
-        nuevo->siguiente = cabeza;
-        cabeza = nuevo;
-
-        agregado = true;
-    }
-
-    return agregado;
-}
-
-bool agregar(Lista& lista, int codigo, string nombre, int cantidad) {
-    return agregar(lista.cabeza, codigo, nombre, cantidad);
-}
-
-void consultar(Nodo* cabeza, int codigo) {
-    Nodo* encontrado = buscar(cabeza, codigo);
-
-    if (encontrado != NULL) {
-        cout << encontrado->codigo << " "
-             << encontrado->nombre << " "
-             << encontrado->cantidad << endl;
-    } else {
-        cout << "no existe" << endl;
-    }
-}
-
-void reponer(Nodo* cabeza, int codigo, int cantidadAdicional) {
-    Nodo* encontrado = buscar(cabeza, codigo);
-
-    if (encontrado != NULL) {
-        encontrado->cantidad = encontrado->cantidad + cantidadAdicional;
-        cout << "ok" << endl;
-    } else {
-        cout << "no existe" << endl;
-    }
-}
-
-void eliminar(Nodo*& cabeza, int codigo) {
-    Nodo* actual = cabeza;
-    Nodo* anterior = NULL;
-
-    while (actual != NULL && actual->codigo != codigo) {
-        anterior = actual;
-        actual = actual->siguiente;
-    }
-
-    if (actual != NULL) {
-        if (anterior == NULL) {
-            cabeza = actual->siguiente;
-        } else {
-            anterior->siguiente = actual->siguiente;
-        }
-
-        delete actual;
-        cout << "ok" << endl;
-    } else {
-        cout << "no existe" << endl;
-    }
-}
-
-void listar(Nodo* cabeza) {
-    Nodo* actual = cabeza;
-
-    while (actual != NULL) {
-        cout << actual->codigo << " "
-             << actual->nombre << " "
-             << actual->cantidad << endl;
-
-        actual = actual->siguiente;
+        actual++;
     }
 }
 
@@ -195,7 +95,7 @@ Nodo** crearTabla(int tamano) {
     return tabla;
 }
 
-bool agregarHash(Nodo** tabla, int tamano, int codigo, string nombre, int cantidad) {
+bool agregarHash(Nodo** tabla, int tamano, int codigo, const string& nombre, int cantidad) {
     bool agregado = false;
 
     int indice = posicion(codigo, tamano);
@@ -216,7 +116,7 @@ bool agregarHash(Nodo** tabla, int tamano, int codigo, string nombre, int cantid
     return agregado;
 }
 
-bool agregar(TablaHash& tabla, int codigo, string nombre, int cantidad) {
+bool agregar(TablaHash& tabla, int codigo, const string& nombre, int cantidad) {
     return agregarHash(tabla.posiciones, tabla.tamano, codigo, nombre, cantidad);
 }
 
@@ -258,59 +158,31 @@ void liberarTabla(Nodo** tabla, int tamano) {
     delete[] tabla;
 }
 
-void consultar(Lista& lista, int codigo) {
-    consultar(lista.cabeza, codigo);
-}
-
 void consultar(TablaHash& tabla, int codigo) {
     consultarHash(tabla.posiciones, tabla.tamano, codigo);
-}
-
-void reponer(Lista& lista, int codigo, int cantidad) {
-    reponer(lista.cabeza, codigo, cantidad);
 }
 
 void reponer(TablaHash& tabla, int codigo, int cantidad) {
     reponerHash(tabla.posiciones, tabla.tamano, codigo, cantidad);
 }
 
-void eliminar(Lista& lista, int codigo) {
-    eliminar(lista.cabeza, codigo);
-}
-
 void eliminar(TablaHash& tabla, int codigo) {
     eliminarHash(tabla.posiciones, tabla.tamano, codigo);
-}
-
-void listar(Lista& lista) {
-    listar(lista.cabeza);
 }
 
 void listar(TablaHash& tabla) {
     listarHash(tabla.posiciones, tabla.tamano);
 }
 
-
-int main(int argc, char* argv[]) {
-
+int main() {
     string estructura = "hash";
-
-    if (argc > 1) {
-        estructura = argv[1];
-    }
-
-    if (estructura != "lista" &&
-        estructura != "hash" &&
-        estructura != "map") {
-        cerr << "Estructura invalida. Use: lista, hash o map" << endl;
-        return 1;
-    }
+    int tamanoHash = 5;
 
     Lista inventarioLista;
     inventarioLista.cabeza = NULL;
 
     TablaHash inventarioHash;
-    inventarioHash.tamano = 5;
+    inventarioHash.tamano = tamanoHash;
     inventarioHash.posiciones = crearTabla(inventarioHash.tamano);
 
     map<int, Producto> inventarioMap;
@@ -319,7 +191,6 @@ int main(int argc, char* argv[]) {
     cin >> cantidadComandos;
 
     for (int i = 0; i < cantidadComandos; i++) {
-
         string operacion;
         cin >> operacion;
 
@@ -338,7 +209,7 @@ int main(int argc, char* argv[]) {
             else if (estructura == "hash") {
                 agregado = agregar(inventarioHash, codigo, nombre, cantidad);
             }
-            else {
+            else if (estructura == "map") {
                 agregado = agregar(inventarioMap, codigo, nombre, cantidad);
             }
 
@@ -348,7 +219,6 @@ int main(int argc, char* argv[]) {
                 cout << "repetido" << endl;
             }
         }
-
         else if (operacion == "CONSULTAR") {
             int codigo;
             cin >> codigo;
@@ -359,11 +229,10 @@ int main(int argc, char* argv[]) {
             else if (estructura == "hash") {
                 consultar(inventarioHash, codigo);
             }
-            else {
+            else if (estructura == "map") {
                 consultar(inventarioMap, codigo);
             }
         }
-
         else if (operacion == "REPONER") {
             int codigo;
             int cantidad;
@@ -376,11 +245,10 @@ int main(int argc, char* argv[]) {
             else if (estructura == "hash") {
                 reponer(inventarioHash, codigo, cantidad);
             }
-            else {
+            else if (estructura == "map") {
                 reponer(inventarioMap, codigo, cantidad);
             }
         }
-
         else if (operacion == "ELIMINAR") {
             int codigo;
             cin >> codigo;
@@ -391,11 +259,10 @@ int main(int argc, char* argv[]) {
             else if (estructura == "hash") {
                 eliminar(inventarioHash, codigo);
             }
-            else {
+            else if (estructura == "map") {
                 eliminar(inventarioMap, codigo);
             }
         }
-
         else if (operacion == "LISTAR") {
             if (estructura == "lista") {
                 listar(inventarioLista);
@@ -403,7 +270,7 @@ int main(int argc, char* argv[]) {
             else if (estructura == "hash") {
                 listar(inventarioHash);
             }
-            else {
+            else if (estructura == "map") {
                 listar(inventarioMap);
             }
         }
