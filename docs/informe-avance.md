@@ -11,6 +11,52 @@ El programa debe permitir agregar artículos, eliminarlos, consultar su informac
 Para este avance utilizamos una lista simplemente enlazada. Cada nodo guarda el código, el nombre y la cantidad de un artículo. También tiene un puntero que señala al siguiente nodo.
 Las operaciones que debe realizar el programa son:
 
+El proyecto consiste en desarrollar un sistema de inventario para una
+tienda, que permita administrar los productos registrados mediante
+diferentes operaciones.
+
+Cada producto estará identificado por un código único y tendrá
+asociados un nombre y una cantidad disponible en el inventario.
+
+El sistema permitirá realizar las siguientes operaciones:
+
+- Agregar productos nuevos al inventario.
+- Consultar un producto mediante su código.
+- Reponer las existencias de un producto registrado.
+- Eliminar productos del inventario.
+- Listar todos los productos registrados.
+
+El objetivo es facilitar la administración de los productos,
+manteniendo organizada la información y permitiendo actualizar las
+cantidades disponibles cuando sea necesario.
+
+Para desarrollar el sistema se utilizará el lenguaje C++ y una
+estructura de datos dinámica que permita almacenar y modificar
+los productos durante la ejecución del programa.
+
+## 2. Qué guarda la estructura y qué operaciones necesita
+
+Cada producto almacenado en el inventario tendrá los siguientes
+atributos:
+
+- Código: identificador único del producto.
+- Nombre: descripción o nombre del producto.
+- Cantidad: número de unidades disponibles.
+
+El sistema contará con las siguientes operaciones:
+
+| Operación | Descripción | Datos necesarios | Precondiciones |
+|-----------|-------------|------------------|----------------|
+| AGREGAR | Registra un producto nuevo. | Código, nombre y cantidad. | El código no debe estar registrado previamente. |
+| CONSULTAR | Busca y muestra la información de un producto. | Código del producto. | Se debe proporcionar un código válido. |
+| REPONER | Aumenta las existencias de un producto. | Código y cantidad que se agrega. | El producto debe existir y la cantidad a reponer debe ser positiva. |
+| ELIMINAR | Retira un producto del inventario. | Código del producto. | El producto debe estar registrado. |
+| LISTAR | Muestra todos los productos del inventario. | No requiere datos adicionales. | Ninguna. |
+
+El código de cada producto debe ser único para evitar registros
+duplicados. Además, las cantidades deben mantenerse en valores
+no negativos.
+
 | Operación | Descripción |
 |---|---|
 | AGREGAR | Agrega un artículo si su código no está registrado. |

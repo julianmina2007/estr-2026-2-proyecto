@@ -1,6 +1,7 @@
 // Autores: Julian Andres Mina Ospina 9028795, Cristian Muñoz Obando 9033692
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -11,6 +12,73 @@ struct Nodo {
     Nodo* siguiente;
 };
 
+struct Producto {
+    string nombre;
+    int cantidad;
+};
+
+bool agregar(map<int, Producto>& inventario,
+             int codigo, string nombre, int cantidad) {
+
+    bool agregado = false;
+
+    if (inventario.find(codigo) == inventario.end()) {
+        Producto nuevo;
+        nuevo.nombre = nombre;
+        nuevo.cantidad = cantidad;
+
+        inventario[codigo] = nuevo;
+        agregado = true;
+    }
+
+    return agregado;
+}
+
+void consultar(map<int, Producto>& inventario, int codigo) {
+    map<int, Producto>::iterator encontrado = inventario.find(codigo);
+
+    if (encontrado != inventario.end()) {
+        cout << codigo << " "
+             << encontrado->second.nombre << " "
+             << encontrado->second.cantidad << endl;
+    } else {
+        cout << "no existe" << endl;
+    }
+}
+
+void reponer(map<int, Producto>& inventario,
+             int codigo, int cantidad) {
+
+    map<int, Producto>::iterator encontrado = inventario.find(codigo);
+
+    if (encontrado != inventario.end()) {
+        encontrado->second.cantidad += cantidad;
+        cout << "ok" << endl;
+    } else {
+        cout << "no existe" << endl;
+    }
+}
+
+void eliminar(map<int, Producto>& inventario, int codigo) {
+    map<int, Producto>::iterator encontrado = inventario.find(codigo);
+
+    if (encontrado != inventario.end()) {
+        inventario.erase(encontrado);
+        cout << "ok" << endl;
+    } else {
+        cout << "no existe" << endl;
+    }
+}
+
+void listar(map<int, Producto>& inventario) {
+    for (map<int, Producto>::iterator actual = inventario.begin();
+         actual != inventario.end(); ++actual) {
+
+        cout << actual->first << " "
+             << actual->second.nombre << " "
+             << actual->second.cantidad << endl;
+    }
+}
 struct Lista {
     Nodo* cabeza;
 };
@@ -222,16 +290,36 @@ void listar(TablaHash& tabla) {
     listarHash(tabla.posiciones, tabla.tamano);
 }
 
-int main() {
-    TablaHash inventario;
 
-    inventario.tamano = 5;
-    inventario.posiciones = crearTabla(inventario.tamano);
+int main(int argc, char* argv[]) {
+
+    string estructura = "hash";
+
+    if (argc > 1) {
+        estructura = argv[1];
+    }
+
+    if (estructura != "lista" &&
+        estructura != "hash" &&
+        estructura != "map") {
+        cerr << "Estructura invalida. Use: lista, hash o map" << endl;
+        return 1;
+    }
+
+    Lista inventarioLista;
+    inventarioLista.cabeza = NULL;
+
+    TablaHash inventarioHash;
+    inventarioHash.tamano = 5;
+    inventarioHash.posiciones = crearTabla(inventarioHash.tamano);
+
+    map<int, Producto> inventarioMap;
 
     int cantidadComandos;
     cin >> cantidadComandos;
 
     for (int i = 0; i < cantidadComandos; i++) {
+
         string operacion;
         cin >> operacion;
 
@@ -242,7 +330,19 @@ int main() {
 
             cin >> codigo >> nombre >> cantidad;
 
-            if (agregar(inventario, codigo, nombre, cantidad)) {
+            bool agregado = false;
+
+            if (estructura == "lista") {
+                agregado = agregar(inventarioLista, codigo, nombre, cantidad);
+            }
+            else if (estructura == "hash") {
+                agregado = agregar(inventarioHash, codigo, nombre, cantidad);
+            }
+            else {
+                agregado = agregar(inventarioMap, codigo, nombre, cantidad);
+            }
+
+            if (agregado) {
                 cout << "ok" << endl;
             } else {
                 cout << "repetido" << endl;
@@ -253,7 +353,15 @@ int main() {
             int codigo;
             cin >> codigo;
 
-            consultar(inventario, codigo);
+            if (estructura == "lista") {
+                consultar(inventarioLista, codigo);
+            }
+            else if (estructura == "hash") {
+                consultar(inventarioHash, codigo);
+            }
+            else {
+                consultar(inventarioMap, codigo);
+            }
         }
 
         else if (operacion == "REPONER") {
@@ -262,22 +370,54 @@ int main() {
 
             cin >> codigo >> cantidad;
 
-            reponer(inventario, codigo, cantidad);
+            if (estructura == "lista") {
+                reponer(inventarioLista, codigo, cantidad);
+            }
+            else if (estructura == "hash") {
+                reponer(inventarioHash, codigo, cantidad);
+            }
+            else {
+                reponer(inventarioMap, codigo, cantidad);
+            }
         }
 
         else if (operacion == "ELIMINAR") {
             int codigo;
             cin >> codigo;
 
-            eliminar(inventario, codigo);
+            if (estructura == "lista") {
+                eliminar(inventarioLista, codigo);
+            }
+            else if (estructura == "hash") {
+                eliminar(inventarioHash, codigo);
+            }
+            else {
+                eliminar(inventarioMap, codigo);
+            }
         }
 
         else if (operacion == "LISTAR") {
-            listar(inventario);
+            if (estructura == "lista") {
+                listar(inventarioLista);
+            }
+            else if (estructura == "hash") {
+                listar(inventarioHash);
+            }
+            else {
+                listar(inventarioMap);
+            }
         }
     }
 
-    liberarTabla(inventario.posiciones, inventario.tamano);
+    Nodo* actual = inventarioLista.cabeza;
+
+    while (actual != NULL) {
+        Nodo* siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
+    }
+
+    liberarTabla(inventarioHash.posiciones, inventarioHash.tamano);
 
     return 0;
 }
