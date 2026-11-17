@@ -23,9 +23,19 @@ bool agregar(Nodo*& cabeza, int codigo, const string& nombre, int cantidad) {
         nuevo->codigo = codigo;
         nuevo->nombre = nombre;
         nuevo->cantidad = cantidad;
+        nuevo->siguiente = NULL;
 
-        nuevo->siguiente = cabeza;
-        cabeza = nuevo;
+        if (cabeza == NULL) {
+            cabeza = nuevo;
+        } else {
+            Nodo* actual = cabeza;
+
+            while (actual->siguiente != NULL) {
+                actual = actual->siguiente;
+            }
+
+            actual->siguiente = nuevo;
+        }
 
         agregado = true;
     }
@@ -57,7 +67,7 @@ void reponer(Nodo* cabeza, int codigo, int cantidadAdicional) {
     Nodo* encontrado = buscar(cabeza, codigo);
 
     if (encontrado != NULL) {
-        encontrado->cantidad = encontrado->cantidad + cantidadAdicional;
+        encontrado->cantidad += cantidadAdicional;
         cout << "ok" << endl;
     } else {
         cout << "no existe" << endl;

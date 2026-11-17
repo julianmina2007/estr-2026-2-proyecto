@@ -1,5 +1,23 @@
 # Bitácora
 
+## 2026-11-17
+
+- **Quiénes:** Cristian Muñoz Obando.
+- **Qué hicimos:** Agregó los experimentos y los resultados al informe final.
+- **Qué quedó pendiente:** Revisar el informe completo y terminar los últimos detalles de la entrega.
+
+## 2026-11-16
+
+- **Quiénes:** Julián Andrés Mina Ospina y Cristian Muñoz Obando.
+- **Qué hicimos:** Julián realizó avances y ajustes en el informe y código. Cristian actualizó el inventario y resolvió un conflicto del informe.
+- **Qué quedó pendiente:** Completar los experimentos, comparar los resultados y escribir las conclusiones.
+
+## 2026-11-14
+
+- **Quiénes:** Julián Andrés Mina Ospina.
+- **Qué hicimos:** Implementó la tabla hash para el inventario.
+- **Qué quedó pendiente:** Continuar con las pruebas y el informe final.
+
 ## 2026-11-02
 
 - **Quiénes:** Julián Andrés Mina Ospina y Cristian Muñoz Obando.

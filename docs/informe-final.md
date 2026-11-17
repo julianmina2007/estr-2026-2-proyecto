@@ -3,7 +3,6 @@
 *(Parte del informe del avance, corregido con la realimentación.)*
 
 ## 1. El escenario y el modelado
-
 El proyecto consiste en desarrollar un programa para manejar el inventario de una tienda. Cada producto tiene un código único, un nombre y una cantidad disponible.
 
 El programa permite agregar productos, consultar su información, reponer unidades, eliminar productos y mostrar todos los productos registrados.
@@ -13,7 +12,6 @@ Para desarrollar el proyecto se utilizan dos estructuras de datos: una lista sim
 También se utiliza `std::map` de C++ como estructura de referencia para comparar el comportamiento de las estructuras implementadas.
 
 ## 2. Las dos estructuras
-
 Para el proyecto trabajamos con dos estructuras de datos: la lista enlazada y la tabla hash con encadenamiento.
 
 **Lista enlazada:**
@@ -29,7 +27,6 @@ Aunque las dos estructuras guardan la información de forma diferente, ambas per
 También utilizamos `std::map` de C++ para comparar nuestros resultados con los de una estructura que ya viene incluida en el lenguaje.
 
 ## 3. Análisis formal de complejidad
-
 En esta parte vamos a revisar cuánto puede tardar cada operación dependiendo de la cantidad de productos que tengamos guardados.
 
 Para el análisis usamos n como la cantidad de productos. En la tabla hash también usamos m para representar la cantidad de posiciones, que en nuestro programa es 5.
@@ -273,7 +270,6 @@ LISTAR|Lista: O(n). Hash: O(n + m), que en nuestro programa es O(n).|O(n)|Se rec
 En general, la lista enlazada necesita recorrer sus nodos para encontrar un producto. La tabla hash puede facilitar las búsquedas cuando los productos quedan bien distribuidos, pero como usamos solamente 5 posiciones, pueden presentarse varias colisiones. Por otro lado, std::map organiza los productos por su código y permite realizar las búsquedas y modificaciones en tiempo logarítmico.
 
 ## 4. Experimentos
-
 Para realizar los experimentos se utilizó un computador con Windows 11 y el compilador GCC 16.2.0, utilizando el estándar C++17. El programa se compiló con las opciones -Wall -Wextra.
 
 Se comparó el tiempo de búsqueda de productos en tres estructuras de datos: la lista enlazada, la tabla hash con encadenamiento y std::map de C++.
@@ -324,7 +320,10 @@ Por otro lado, std::map presentó los menores tiempos de consulta en todos los t
 Al comparar las tres estructuras, se observa que los resultados experimentales coinciden con lo esperado en el análisis de complejidad. La lista enlazada y la tabla hash tuvieron mayores tiempos de búsqueda al aumentar la cantidad de productos, mientras que std::map presentó un comportamiento más estable.
 
 En conclusión, para las condiciones de estos experimentos, std::map obtuvo el mejor rendimiento en las consultas. La tabla hash fue más rápida que la lista enlazada, pero su tamaño fijo y las colisiones afectaron su desempeño. Si se aumentara el tamaño de la tabla hash y se utilizara una función de dispersión adecuada, su rendimiento podría mejorar.
-## 6. Conclusiones
 
-(Cuál estructura conviene para este escenario y bajo qué condiciones
-cambiaría la respuesta.)
+## 6. Conclusiones
+Según los resultados de las pruebas, consideramos que `std::map` fue la mejor opción para este inventario, porque obtuvo los menores tiempos de búsqueda.
+
+La tabla hash también tuvo buenos resultados frente a la lista enlazada, pero su rendimiento se vio afectado por las colisiones y por tener un tamaño fijo de 5 posiciones.
+
+La elección podría cambiar si se aumenta el tamaño de la tabla hash y se mejora la distribución de los productos. En ese caso, podría ser una mejor opción para realizar búsquedas. Si se necesita mantener los productos ordenados por código, `std::map` sigue siendo una buena alternativa.

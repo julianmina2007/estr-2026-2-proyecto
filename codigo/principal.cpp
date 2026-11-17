@@ -95,6 +95,7 @@ Nodo** crearTabla(int tamano) {
     return tabla;
 }
 
+
 bool agregarHash(Nodo** tabla, int tamano, int codigo, const string& nombre, int cantidad) {
     bool agregado = false;
 
@@ -106,9 +107,19 @@ bool agregarHash(Nodo** tabla, int tamano, int codigo, const string& nombre, int
         nuevo->codigo = codigo;
         nuevo->nombre = nombre;
         nuevo->cantidad = cantidad;
+        nuevo->siguiente = NULL;
 
-        nuevo->siguiente = tabla[indice];
-        tabla[indice] = nuevo;
+        if (tabla[indice] == NULL) {
+            tabla[indice] = nuevo;
+        } else {
+            Nodo* actual = tabla[indice];
+
+            while (actual->siguiente != NULL) {
+                actual = actual->siguiente;
+            }
+
+            actual->siguiente = nuevo;
+        }
 
         agregado = true;
     }
