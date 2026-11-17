@@ -32,205 +32,245 @@ También utilizamos `std::map` de C++ para comparar nuestros resultados con los 
 
 En esta parte vamos a revisar cuánto puede tardar cada operación dependiendo de la cantidad de productos que tengamos guardados.
 
-Para el análisis usamos `n` como la cantidad de productos. En la tabla hash también usamos `m` para representar la cantidad de posiciones, que en nuestro programa es 5.
+Para el análisis usamos n como la cantidad de productos. En la tabla hash también usamos m para representar la cantidad de posiciones, que en nuestro programa es 5.
 
-Para hacer las demostraciones contamos los pasos básicos que necesita cada operación. Cada nodo que se revisa puede necesitar como máximo 10 pasos, y también tenemos algunos pasos adicionales que no dependen de la cantidad de productos.
+Para las demostraciones usamos un modelo de costo en el que revisar un nodo tiene un costo constante. Llamamos a a ese costo máximo y b al costo de las instrucciones adicionales que no dependen de la cantidad de productos. Estos valores son constantes, es decir, no cambian cuando aumenta la cantidad de productos.
 
-### 3.1. Lista enlazada
+3.1. Lista enlazada
 
-**Operación CONSULTAR**
+Operación CONSULTAR
 
-**Teorema.** CONSULTAR tiene un costo de O(n), donde n es la cantidad de productos de la lista.
+Teorema. CONSULTAR tiene un costo de O(n), donde n es la cantidad de productos de la lista.
 
-**Demostración.** Para consultar un producto, el programa busca su código recorriendo la lista desde el primer nodo. Si el producto está al final o no existe, debe revisar todos los nodos.
+Demostración. Para consultar un producto, el programa utiliza la función buscar, que recorre la lista desde el primer nodo hasta encontrar el código. En el peor caso, el producto está al final o no existe, por lo que se revisan todos los nodos.
 
-**Desarrollo.** Como se pueden revisar máximo n nodos y cada revisión necesita como máximo 10 pasos, tenemos:
+Desarrollo. Como se pueden revisar hasta n nodos y cada revisión tiene un costo constante a, además de un costo adicional b, tenemos:
 
-T(n) es menor o igual que 10n + 20.
-
-Para todo n mayor o igual que 1:
-
-10n + 20 es menor o igual que 30n.
-
-**Conclusión.** Por lo tanto, CONSULTAR pertenece a O(n), con testigos c = 30 y k = 1.
-
-**Operación AGREGAR**
-
-**Teorema.** AGREGAR tiene un costo de O(n).
-
-**Demostración.** Antes de agregar un producto, el programa revisa que su código no esté repetido. Si no lo encuentra, crea el nuevo nodo y lo coloca al inicio de la lista.
-
-**Desarrollo.** En el peor caso, el programa debe revisar todos los productos antes de agregar el nuevo. Después realiza los pasos necesarios para crear y enlazar el nodo.
-
-T(n) es menor o igual que 10n + 20.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 20 es menor o igual que 30n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, AGREGAR pertenece a O(n), con testigos c = 30 y k = 1.
+Conclusión. Por lo tanto, CONSULTAR pertenece a O(n), con testigos c = a + b y k = 1.
 
-**Operación REPONER**
+Operación AGREGAR
 
-**Teorema.** REPONER tiene un costo de O(n).
+Teorema. AGREGAR tiene un costo de O(n).
 
-**Demostración.** Para reponer unidades, el programa primero busca el producto por su código. Cuando lo encuentra, aumenta la cantidad disponible.
+Demostración. Antes de agregar un producto, el programa utiliza buscar para comprobar que su código no esté repetido. Si no lo encuentra, crea el nuevo nodo y lo coloca al inicio de la lista.
 
-**Desarrollo.** En el peor caso, se deben revisar todos los nodos para encontrar el producto.
+Desarrollo. En el peor caso, el programa debe revisar todos los productos antes de agregar el nuevo. Después realiza una cantidad constante de pasos para crear y enlazar el nodo.
 
-T(n) es menor o igual que 10n + 20.
-
-Para todo n mayor o igual que 1:
-
-10n + 20 es menor o igual que 30n.
-
-**Conclusión.** Por lo tanto, REPONER pertenece a O(n), con testigos c = 30 y k = 1.
-
-**Operación ELIMINAR**
-
-**Teorema.** ELIMINAR tiene un costo de O(n).
-
-**Demostración.** Para eliminar un producto, el programa recorre la lista hasta encontrar su código. Cuando lo encuentra, actualiza los enlaces y libera la memoria del nodo.
-
-**Desarrollo.** En el peor caso, el producto está al final o no existe, por lo que se deben revisar todos los nodos.
-
-T(n) es menor o igual que 10n + 20.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 20 es menor o igual que 30n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, ELIMINAR pertenece a O(n), con testigos c = 30 y k = 1.
+Conclusión. Por lo tanto, AGREGAR pertenece a O(n), con testigos c = a + b y k = 1.
 
-**Operación LISTAR**
+Operación REPONER
 
-**Teorema.** LISTAR tiene un costo de O(n).
+Teorema. REPONER tiene un costo de O(n).
 
-**Demostración.** Para mostrar los productos, el programa recorre la lista desde el primer nodo hasta llegar al final.
+Demostración. Para reponer unidades, el programa primero busca el producto por su código. Cuando lo encuentra, aumenta la cantidad disponible.
 
-**Desarrollo.** Cada producto se revisa una sola vez para mostrar su información.
+Desarrollo. En el peor caso, se deben revisar todos los nodos para encontrar el producto. La actualización de la cantidad requiere una cantidad constante de pasos.
 
-T(n) es menor o igual que 10n + 20.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 20 es menor o igual que 30n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, LISTAR pertenece a O(n), con testigos c = 30 y k = 1.
+Conclusión. Por lo tanto, REPONER pertenece a O(n), con testigos c = a + b y k = 1.
 
-### 3.2. Tabla hash con encadenamiento
+Operación ELIMINAR
+
+Teorema. ELIMINAR tiene un costo de O(n).
+
+Demostración. Para eliminar un producto, el programa recorre la lista hasta encontrar su código. Cuando lo encuentra, actualiza los enlaces y libera la memoria del nodo.
+
+Desarrollo. En el peor caso, el producto está al final o no existe, por lo que se deben revisar todos los nodos. La actualización de los enlaces y la liberación del nodo requieren una cantidad constante de pasos.
+
+T(n) es menor o igual que a por n más b.
+
+Para todo n mayor o igual que 1:
+
+a por n más b es menor o igual que (a más b) por n.
+
+Conclusión. Por lo tanto, ELIMINAR pertenece a O(n), con testigos c = a + b y k = 1.
+
+Operación LISTAR
+
+Teorema. LISTAR tiene un costo de O(n).
+
+Demostración. Para mostrar los productos, el programa recorre la lista desde el primer nodo hasta llegar al final.
+
+Desarrollo. Cada producto se revisa una sola vez para mostrar su información. Por lo tanto, el costo depende directamente de la cantidad de nodos.
+
+T(n) es menor o igual que a por n más b.
+
+Para todo n mayor o igual que 1:
+
+a por n más b es menor o igual que (a más b) por n.
+
+Conclusión. Por lo tanto, LISTAR pertenece a O(n), con testigos c = a + b y k = 1.
+
+3.2. Tabla hash con encadenamiento
 
 En nuestra tabla hash usamos el código del producto para calcular la posición donde se guarda. Si varios productos quedan en la misma posición, se guardan en una lista enlazada.
 
-**Operación AGREGAR**
+La tabla tiene 5 posiciones. En el peor caso, todos los productos pueden quedar en una misma posición y formar una lista enlazada de n nodos.
 
-**Teorema.** AGREGAR tiene un costo de O(n) en el peor caso.
+Operación AGREGAR
 
-**Demostración.** Para agregar un producto, el programa calcula su posición y revisa la lista correspondiente para comprobar que el código no esté repetido.
+Teorema. AGREGAR tiene un costo de O(n) en el peor caso.
 
-**Desarrollo.** En el peor caso, todos los productos pueden quedar en la misma posición. Por eso, se pueden revisar hasta n nodos antes de agregar el nuevo.
+Demostración. Para agregar un producto, el programa calcula su posición y revisa la lista correspondiente para comprobar que el código no esté repetido.
 
-T(n) es menor o igual que 10n + 25.
+Desarrollo. Calcular la posición tiene un costo constante. En el peor caso, todos los productos pueden quedar en la misma posición, por lo que se pueden revisar hasta n nodos antes de agregar el nuevo.
 
-Para todo n mayor o igual que 1:
-
-10n + 25 es menor o igual que 35n.
-
-**Conclusión.** Por lo tanto, AGREGAR pertenece a O(n) en el peor caso, con testigos c = 35 y k = 1.
-
-**Operación CONSULTAR**
-
-**Teorema.** CONSULTAR tiene un costo de O(n) en el peor caso.
-
-**Demostración.** El programa calcula la posición del código y busca el producto dentro de la lista enlazada que se encuentra en esa posición.
-
-**Desarrollo.** Si todos los productos están en la misma posición, se deben revisar hasta n nodos.
-
-T(n) es menor o igual que 10n + 25.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 25 es menor o igual que 35n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, CONSULTAR pertenece a O(n) en el peor caso, con testigos c = 35 y k = 1.
+Conclusión. Por lo tanto, AGREGAR pertenece a O(n) en el peor caso, con testigos c = a + b y k = 1.
 
-**Operación REPONER**
+Operación CONSULTAR
 
-**Teorema.** REPONER tiene un costo de O(n) en el peor caso.
+Teorema. CONSULTAR tiene un costo de O(n) en el peor caso.
 
-**Demostración.** Para reponer unidades, el programa calcula la posición del producto y busca su código en la lista correspondiente. Cuando lo encuentra, actualiza la cantidad.
+Demostración. El programa calcula la posición del código y busca el producto dentro de la lista enlazada que se encuentra en esa posición.
 
-**Desarrollo.** En el peor caso, todos los productos están en la misma posición y se deben revisar hasta n nodos.
+Desarrollo. Si todos los productos están en la misma posición, se deben revisar hasta n nodos. El cálculo de la posición tiene un costo constante.
 
-T(n) es menor o igual que 10n + 25.
-
-Para todo n mayor o igual que 1:
-
-10n + 25 es menor o igual que 35n.
-
-**Conclusión.** Por lo tanto, REPONER pertenece a O(n) en el peor caso, con testigos c = 35 y k = 1.
-
-**Operación ELIMINAR**
-
-**Teorema.** ELIMINAR tiene un costo de O(n) en el peor caso.
-
-**Demostración.** El programa calcula la posición del producto y busca su código en la lista correspondiente. Cuando lo encuentra, actualiza los enlaces y libera el nodo.
-
-**Desarrollo.** Si todos los productos están en la misma posición, se pueden revisar hasta n nodos.
-
-T(n) es menor o igual que 10n + 25.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 25 es menor o igual que 35n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, ELIMINAR pertenece a O(n) en el peor caso, con testigos c = 35 y k = 1.
+Conclusión. Por lo tanto, CONSULTAR pertenece a O(n) en el peor caso, con testigos c = a + b y k = 1.
 
-**Operación LISTAR**
+Operación REPONER
 
-**Teorema.** LISTAR tiene un costo de O(n + m).
+Teorema. REPONER tiene un costo de O(n) en el peor caso.
 
-**Demostración.** Para mostrar los productos, el programa recorre las posiciones de la tabla y muestra los productos que encuentra en cada lista.
+Demostración. Para reponer unidades, el programa calcula la posición del producto y busca su código en la lista correspondiente. Cuando lo encuentra, actualiza la cantidad.
 
-**Desarrollo.** Se revisan las m posiciones y los n productos guardados.
+Desarrollo. En el peor caso, todos los productos están en la misma posición y se deben revisar hasta n nodos. La actualización de la cantidad tiene un costo constante.
 
-T(n,m) es menor o igual que 10n + 10m + 20.
-
-En nuestro programa m vale 5. Entonces:
-
-T(n) es menor o igual que 10n + 70.
+T(n) es menor o igual que a por n más b.
 
 Para todo n mayor o igual que 1:
 
-10n + 70 es menor o igual que 80n.
+a por n más b es menor o igual que (a más b) por n.
 
-**Conclusión.** Por lo tanto, LISTAR pertenece a O(n), porque nuestra tabla tiene un tamaño fijo de 5 posiciones, con testigos c = 80 y k = 1.
+Conclusión. Por lo tanto, REPONER pertenece a O(n) en el peor caso, con testigos c = a + b y k = 1.
 
-### 3.3. Estructura de la biblioteca: std::map
+Operación ELIMINAR
 
-También usamos `std::map` para comparar nuestro trabajo con una estructura que ya viene incluida en C++.
+Teorema. ELIMINAR tiene un costo de O(n) en el peor caso.
 
-Esta estructura organiza los productos por su código y utiliza un árbol balanceado. Sus costos son los siguientes:
+Demostración. El programa calcula la posición del producto y busca su código en la lista correspondiente. Cuando lo encuentra, actualiza los enlaces y libera el nodo.
 
-- **AGREGAR:** O(log n), porque debe ubicar el código donde se va a guardar el producto.
-- **CONSULTAR:** O(log n), porque busca el código dentro del árbol.
-- **REPONER:** O(log n), porque primero busca el producto y después actualiza su cantidad.
-- **ELIMINAR:** O(log n), porque primero busca el producto y después lo elimina.
-- **LISTAR:** O(n), porque debe recorrer todos los productos para mostrarlos.
+Desarrollo. Si todos los productos están en la misma posición, se pueden revisar hasta n nodos. La actualización de los enlaces y la liberación del nodo tienen un costo constante.
 
-Estos costos corresponden al comportamiento de `std::map` de C++, que utilizamos como referencia y no implementamos desde cero.
+T(n) es menor o igual que a por n más b.
 
-### 3.4. Resumen de costos
+Para todo n mayor o igual que 1:
 
-| Operación | Desde cero | De la biblioteca | Por qué |
-|---|---|---|---|
-| AGREGAR | Lista: O(n). Hash: O(n) en el peor caso. | O(log n) | Antes de agregar, se revisa que el código no esté repetido. |
-| CONSULTAR | Lista: O(n). Hash: O(n) en el peor caso. | O(log n) | Se busca el producto por medio de su código. |
-| REPONER | Lista: O(n). Hash: O(n) en el peor caso. | O(log n) | Primero se busca el producto y después se actualiza la cantidad. |
-| ELIMINAR | Lista: O(n). Hash: O(n) en el peor caso. | O(log n) | Se busca el producto y se elimina de la estructura. |
-| LISTAR | Lista: O(n). Hash: O(n + m). | O(n) | Se recorren los productos para mostrar su información. |
+a por n más b es menor o igual que (a más b) por n.
 
-En general, la lista enlazada necesita recorrer sus nodos para encontrar un producto. La tabla hash puede facilitar las búsquedas cuando los productos quedan bien distribuidos, pero como usamos solamente 5 posiciones, pueden presentarse varias colisiones. Por otro lado, `std::map` organiza los productos por su código y permite realizar las búsquedas y modificaciones en tiempo logarítmico.
+Conclusión. Por lo tanto, ELIMINAR pertenece a O(n) en el peor caso, con testigos c = a + b y k = 1.
+
+Operación LISTAR
+
+Teorema. LISTAR tiene un costo de O(n + m).
+
+Demostración. Para mostrar los productos, el programa recorre todas las posiciones de la tabla y muestra los productos que encuentra en cada lista enlazada.
+
+Desarrollo. Se revisan las m posiciones de la tabla y los n productos guardados. Llamamos d al costo constante de revisar una posición y b al costo adicional de la operación.
+
+T(n,m) es menor o igual que a por n más d por m más b.
+
+Para n y m mayores o iguales que 1:
+
+a por n más d por m más b es menor o igual que (a más d más b) por (n más m).
+
+Conclusión. Por lo tanto, LISTAR pertenece a O(n + m), con testigos c = a + d + b y k = 1.
+
+En nuestro programa m vale 5. Como el tamaño de la tabla es fijo, LISTAR también pertenece a O(n), porque el costo de recorrer las posiciones no aumenta cuando crece la cantidad de productos.
+
+3.3. Estructura de la biblioteca: std::map
+
+También usamos std::map para comparar nuestro trabajo con una estructura que ya viene incluida en C++.
+
+Esta estructura mantiene los productos organizados por su código mediante un árbol balanceado. Sus operaciones principales tienen los siguientes costos:
+
+AGREGAR: O(log n). Primero se busca si el código ya existe y después se inserta el producto. Ambas operaciones tienen costo logarítmico.
+
+CONSULTAR: O(log n). Busca el código dentro del árbol balanceado.
+
+REPONER: O(log n). Primero busca el producto y después actualiza su cantidad.
+
+ELIMINAR: O(log n). Primero busca el producto y después lo elimina.
+
+LISTAR: O(n). Recorre todos los productos para mostrar su información.
+
+Demostración de las operaciones de búsqueda, inserción y eliminación.
+
+Teorema. Las operaciones AGREGAR, CONSULTAR, REPONER y ELIMINAR tienen un costo de O(log n) en std::map.
+
+Demostración. std::map utiliza un árbol balanceado. Al buscar, insertar o ubicar un producto, el programa avanza por los niveles del árbol. Como el árbol se mantiene balanceado, su altura crece de forma logarítmica respecto a la cantidad de productos.
+
+Desarrollo. Si a representa una constante que limita el costo de recorrer cada nivel y b representa los pasos adicionales, el costo puede expresarse como:
+
+T(n) es menor o igual que a por logaritmo en base 2 de (n + 1), más b.
+
+Para n mayor o igual que 2, el logaritmo en base 2 de (n + 1) es menor o igual que dos veces el logaritmo en base 2 de n. Además, el logaritmo en base 2 de n es mayor o igual que 1.
+
+Por lo tanto, T(n) es menor o igual que (2a + b) por logaritmo en base 2 de n.
+
+Conclusión. Por lo tanto, estas operaciones pertenecen a O(log n), con testigos c = 2a + b y k = 2.
+
+Demostración de LISTAR.
+
+Teorema. LISTAR tiene un costo de O(n) en std::map.
+
+Demostración. Para mostrar los productos, el programa recorre todos los elementos del mapa utilizando un iterador.
+
+Desarrollo. Cada producto se visita una vez y avanzar al siguiente elemento tiene un costo constante amortizado. Por eso, el costo total es proporcional a la cantidad de productos.
+
+T(n) es menor o igual que a por n más b.
+
+Para todo n mayor o igual que 1:
+
+a por n más b es menor o igual que (a más b) por n.
+
+Conclusión. Por lo tanto, LISTAR pertenece a O(n), con testigos c = a + b y k = 1.
+
+Estos costos corresponden al comportamiento de std::map de C++, que utilizamos como referencia y no implementamos desde cero.
+
+3.4. Resumen de costos
+
+Operación|Desde cero|De la biblioteca|Por qué|
+
+AGREGAR|Lista: O(n). Hash: O(n) en el peor caso.|O(log n)|Antes de agregar,se revisa que el código no este repetido
+
+CONSULTAR|Lista: O(n). Hash: O(n) en el peor caso.|O(log n)|Se busca el producto por medio de su código.
+
+REPONER|Lista: O(n). Hash: O(n) en el peor caso.|O(log n)|Primero se busca el producto y después se actualiza la cantidad.
+
+ELIMINAR|Lista: O(n). Hash: O(n) en el peor caso.|O(log n)|Se busca el producto y se elimina de la estructura.
+
+LISTAR|Lista: O(n). Hash: O(n + m), que en nuestro programa es O(n).|O(n)|Se recorren las posiciones y los productos para mostrar su información.
+
+En general, la lista enlazada necesita recorrer sus nodos para encontrar un producto. La tabla hash puede facilitar las búsquedas cuando los productos quedan bien distribuidos, pero como usamos solamente 5 posiciones, pueden presentarse varias colisiones. Por otro lado, std::map organiza los productos por su código y permite realizar las búsquedas y modificaciones en tiempo logarítmico.
 
 ## 4. Experimentos
 
